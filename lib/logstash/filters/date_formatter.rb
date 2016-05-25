@@ -150,13 +150,15 @@ class LogStash::Filters::DateFormatter < LogStash::Filters::Base
   def filter(event)
     return unless filter?(event)
     return unless event.include?(@source)
-    src = event[@source]
+    src = event.get(@source)
     src = src.first if src.respond_to?(:each)
     target = nil
-    begin 
+    begin
       case src
       when LogStash::Timestamp,Time
         target = getFormatter(event).print((src.to_f * 1000.0).to_i)
+      when Java::OrgJodaTime::DateTime
+        target = getFormatter(event).print(src)
       else
         @logger.warn("Unsupporter source field. It is neither a ruby Time or a Logstash::Timestamp")
       end
@@ -165,13 +167,12 @@ class LogStash::Filters::DateFormatter < LogStash::Filters::Base
                    :value => src, :exception => e.message)
       # Tag this event. We can use this later to reparse+reindex logs if necessary.
       @tag_on_failure.each do |tag|
-        event["tags"] ||= []
-        event["tags"] << tag unless event["tags"].include?(tag)
+        event.tag(tag)
       end
       target = nil
     end
     if target
-      event[@target] = target
+      event.set(@target, target)
       filter_matched(event)
     end
     return event

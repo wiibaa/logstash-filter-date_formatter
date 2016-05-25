@@ -19,10 +19,10 @@ RUBY_ENGINE == "jruby" and describe LogStash::Filters::DateFormatter do
     CONFIG
 
     sample({ "mydate" => LogStash::Timestamp.at(1423718682)}) do
-      expect(subject["locale_date"]).to eq("jeudi, 12 février 2015")
+      expect(subject.get("locale_date")).to eq("jeudi, 12 février 2015")
     end
   end
-  
+
   describe "Using a specific timezone" do
     config <<-CONFIG
       filter {
@@ -36,7 +36,7 @@ RUBY_ENGINE == "jruby" and describe LogStash::Filters::DateFormatter do
     CONFIG
 
     sample({ "mydate" => LogStash::Timestamp.at(1423718682)}) do
-      expect(subject["locale_date"]).to eq("2015-02-12T06:24:42.000+01:00")
+      expect(subject.get("locale_date")).to eq("2015-02-12T06:24:42.000+01:00")
     end
   end
 
@@ -53,7 +53,7 @@ RUBY_ENGINE == "jruby" and describe LogStash::Filters::DateFormatter do
     CONFIG
 
     sample({ "mydate" => LogStash::Timestamp.at(1423718682)}) do
-      expect(subject["japan_date"]).to eq("2015年02月12日")
+      expect(subject.get("japan_date")).to eq("2015年02月12日")
     end
   end
 
@@ -70,13 +70,13 @@ RUBY_ENGINE == "jruby" and describe LogStash::Filters::DateFormatter do
     CONFIG
 
     sample({ "mydate" => LogStash::Timestamp.at(1423718682)}) do
-      expect(subject["locale_date"]).to eq("2015-02-12T06:24:42.000+01:00")
+      expect(subject.get("locale_date")).to eq("2015-02-12T06:24:42.000+01:00")
     end
     sample({ "mydate" => Time.at(1423718682)}) do
-      expect(subject["locale_date"]).to eq("2015-02-12T06:24:42.000+01:00")
+      expect(subject.get("locale_date")).to eq("2015-02-12T06:24:42.000+01:00")
     end
     sample({ "mydate" => "any string"}) do
-      expect(subject["locale_date"]).to be_nil
+      expect(subject.get("locale_date")).to be_nil
     end
   end
 
@@ -94,10 +94,10 @@ RUBY_ENGINE == "jruby" and describe LogStash::Filters::DateFormatter do
     CONFIG
 
     sample({ "mydate" => LogStash::Timestamp.at(1423718682), "locale" => "fr-Fr", "timezone" => "Europe/Paris"}) do
-      expect(subject["locale_date"]).to eq("jeudi, 12 février 2015 +01:00")
+      expect(subject.get("locale_date")).to eq("jeudi, 12 février 2015 +01:00")
     end
     sample({ "mydate" => LogStash::Timestamp.at(1423718682), "locale" => "en-US", "timezone" => "America/Los_Angeles"}) do
-      expect(subject["locale_date"]).to eq("Wednesday, 11 February 2015 -08:00")
+      expect(subject.get("locale_date")).to eq("Wednesday, 11 February 2015 -08:00")
     end
   end
 
@@ -115,10 +115,10 @@ RUBY_ENGINE == "jruby" and describe LogStash::Filters::DateFormatter do
     CONFIG
 
     sample({ "mydate" => LogStash::Timestamp.at(1423718682), "pattern" => "EEEE, dd MMMM yyyy ZZ"}) do
-       expect(subject["locale_date"]).to eq("Wednesday, 11 February 2015 -08:00")
+       expect(subject.get("locale_date")).to eq("Wednesday, 11 February 2015 -08:00")
     end
     sample({ "mydate" => LogStash::Timestamp.at(1423718682), "pattern" => "yyyy-MM-dd'T'HH:mm:ss.SSSZZ"}) do
-       expect(subject["locale_date"]).to eq("2015-02-11T21:24:42.000-08:00")
+       expect(subject.get("locale_date")).to eq("2015-02-11T21:24:42.000-08:00")
     end
   end
 
@@ -167,8 +167,8 @@ RUBY_ENGINE == "jruby" and describe LogStash::Filters::DateFormatter do
       CONFIG
 
       sample({ "mydate" => LogStash::Timestamp.at(1423718682), "pattern" => "yyyy-MM-ddabcdef"}) do
-        expect(subject["dateformatted"]).to be_nil
-        expect(subject["tags"]).to include("_dateformatfailure")
+        expect(subject.get("dateformatted")).to be_nil
+        expect(subject.get("tags")).to include("_dateformatfailure")
       end
     end
   end
