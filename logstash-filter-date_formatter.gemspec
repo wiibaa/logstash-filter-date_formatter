@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
 
   s.name            = 'logstash-filter-date_formatter'
-  s.version         = '2.0.0'
+  s.version         = '2.0.1'
   s.platform        = 'java'
   s.licenses        = ['Apache License (2.0)']
   s.summary         = "The date_formatter filter is used for formatting date or time from fields containing a time object like @timestamp, and then storing that formatted string in the field defined as target."

@@ -1,3 +1,6 @@
+## 2.0.1
+ - internal: republish as jruby gem only
+
 ## 2.0.0
  - internal: change compatibility to new plugin API targetting 5.0
 
